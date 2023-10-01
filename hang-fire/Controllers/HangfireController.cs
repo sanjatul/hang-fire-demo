@@ -34,6 +34,16 @@ namespace hang_fire.Controllers
             RecurringJob.AddOrUpdate(() => Console.WriteLine("database updated"), Cron.Minutely);
             return Ok("Database check job initiated");
         }
+        [HttpPost]
+        [Route("[action]")]
+        public IActionResult Confirm()
+        {
+            //Continuos Job
+            int timeInSeconds = 30;
+            var parentJobId = BackgroundJob.Schedule(() => SendWelcomeEmail("Unsubscribe"), TimeSpan.FromSeconds(timeInSeconds));
+            BackgroundJob.ContinueJobWith(parentJobId,()=>Console.WriteLine("Your plan terminated"));
+            return Ok($"Confirmation Job Created");
+        }
         public void SendWelcomeEmail(string text)
         {
             Console.WriteLine(text);
