@@ -24,6 +24,16 @@ namespace hang_fire.Controllers
             var jobId = BackgroundJob.Schedule(() => SendWelcomeEmail("Welcome to our app."),TimeSpan.FromSeconds(timeInSeconds));
             return Ok($"Job Id:{jobId}, Discount email sent to user in {timeInSeconds}");
         }
+        [HttpPost]
+        [Route("[action]")]
+        [Obsolete]
+        public IActionResult DatabaseUpdate()
+        {
+            //Recurring job
+
+            RecurringJob.AddOrUpdate(() => Console.WriteLine("database updated"), Cron.Minutely);
+            return Ok("Database check job initiated");
+        }
         public void SendWelcomeEmail(string text)
         {
             Console.WriteLine(text);
